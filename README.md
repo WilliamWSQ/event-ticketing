@@ -17,10 +17,10 @@ entire UI — chrome _and_ concert content — re-localizes live.
 ## Getting started
 
 ```bash
-npm install
-npm run dev        # http://localhost:5173
-npm run build      # type-check (tsc -b) + production build
-npm run preview    # serve the production build
+yarn            # install dependencies
+yarn dev        # http://localhost:5173
+yarn build      # type-check (tsc -b) + production build
+yarn preview    # serve the production build
 ```
 
 ## Routes / screens

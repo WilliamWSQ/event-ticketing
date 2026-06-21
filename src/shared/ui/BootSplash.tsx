@@ -86,7 +86,7 @@ export function BootSplash({ error }: { error?: string }) {
         <ErrorBox>
           <ErrorTitle>Не удалось загрузить данные</ErrorTitle>
           <ErrorMsg>{error}</ErrorMsg>
-          <ErrorHint>Проверьте, что API запущен на :4000 — npm run dev в backend/</ErrorHint>
+          <ErrorHint>Проверьте, что API запущен на :4000 — yarn dev в backend/</ErrorHint>
         </ErrorBox>
       ) : (
         <Loading>Загрузка афиши…</Loading>
