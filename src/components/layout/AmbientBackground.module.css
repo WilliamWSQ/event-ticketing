@@ -1,0 +1,35 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(20px);
+  z-index: 0;
+  pointer-events: none;
+  animation: pulse-glow-breath 9s ease-in-out infinite;
+}
+
+.glowCyan {
+  top: -15%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(128, 234, 255, 0.16), transparent 65%);
+}
+
+.glowMagenta {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(255, 0, 92, 0.15), transparent 65%);
+  animation-duration: 11s;
+  animation-delay: 1s;
+}

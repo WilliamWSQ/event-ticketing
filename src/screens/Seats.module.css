@@ -1,0 +1,326 @@
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 32px) clamp(20px, 5vw, 56px) 140px;
+  animation: pulse-rise 0.5s var(--ease-emphasis) both;
+}
+
+.head {
+  margin-bottom: 26px;
+}
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-cyan);
+  font-weight: 700;
+}
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: -0.03em;
+  margin: 6px 0 0;
+  color: #fff;
+}
+
+/* --------------------------------------------------------------- Arena */
+.arena {
+  position: relative;
+  border-radius: var(--r-3xl);
+  padding: clamp(20px, 4vw, 40px);
+  background: radial-gradient(120% 120% at 50% 0%, #15151d, #0a0a12 70%);
+  border: 1px solid var(--line-08);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.gridLines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(128, 234, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(128, 234, 255, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(80% 80% at 50% 30%, #000, transparent);
+  mask-image: radial-gradient(80% 80% at 50% 30%, #000, transparent);
+}
+.stage {
+  position: relative;
+  margin: 0 auto 8px;
+  width: min(70%, 520px);
+  height: 54px;
+  border-radius: 14px 14px 4px 4px;
+  background: linear-gradient(180deg, #80eaff, #9580ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--c-page);
+  font-size: 14px;
+  box-shadow: 0 0 50px rgba(128, 234, 255, 0.5);
+}
+.stageGlow {
+  position: relative;
+  margin: 0 auto 22px;
+  width: min(78%, 580px);
+  height: 30px;
+  background: radial-gradient(80% 200% at 50% 0%, rgba(128, 234, 255, 0.4), transparent 70%);
+}
+
+.zones {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.zone {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 18px 22px;
+  border-radius: var(--r-mid);
+  color: #fff;
+  transition: outline-color var(--dur-base) ease;
+}
+.zoneRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.zoneName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+.zonePrice {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.zoneDesc {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.zoneVip {
+  background: linear-gradient(120deg, rgba(255, 0, 92, 0.32), rgba(255, 0, 92, 0.14));
+  outline: 1.5px solid rgba(255, 0, 92, 0.4);
+}
+.zoneVip:hover {
+  outline-color: #ff005c;
+}
+.zoneVip .zoneDesc {
+  color: #ffc2d6;
+}
+
+.zoneGap {
+  background: linear-gradient(120deg, rgba(149, 128, 255, 0.3), rgba(149, 128, 255, 0.12));
+  outline: 1.5px solid rgba(149, 128, 255, 0.4);
+}
+.zoneGap:hover {
+  outline-color: #9580ff;
+}
+.zoneGap .zoneDesc {
+  color: #d6ceff;
+}
+
+.zoneGa {
+  padding: 22px;
+  background: linear-gradient(120deg, rgba(128, 234, 255, 0.26), rgba(128, 234, 255, 0.1));
+  outline: 1.5px solid rgba(128, 234, 255, 0.4);
+}
+.zoneGa:hover {
+  outline-color: #80eaff;
+}
+.zoneGa .zoneDesc {
+  color: #c2f2ff;
+}
+
+.zoneCabana {
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(255, 0, 92, 0.2), rgba(128, 234, 255, 0.18));
+  outline: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+.zoneCabana:hover {
+  outline-color: #fff;
+}
+.zoneCabana .zoneName {
+  font-size: 15px;
+}
+.zoneCabana .zoneDesc {
+  color: #e6e6ec;
+}
+
+/* selection ring */
+.ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 11px;
+  pointer-events: none;
+}
+.zoneVip .ring {
+  outline: 2.5px solid #ff005c;
+  box-shadow: 0 0 26px rgba(255, 0, 92, 0.6), inset 0 0 24px rgba(255, 0, 92, 0.25);
+}
+.zoneGap .ring {
+  outline: 2.5px solid #9580ff;
+  box-shadow: 0 0 26px rgba(149, 128, 255, 0.6), inset 0 0 24px rgba(149, 128, 255, 0.25);
+}
+.zoneGa .ring {
+  outline: 2.5px solid #80eaff;
+  box-shadow: 0 0 26px rgba(128, 234, 255, 0.6), inset 0 0 24px rgba(128, 234, 255, 0.25);
+}
+.zoneCabana .ring {
+  outline: 2.5px solid #fff;
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.5);
+}
+
+/* --------------------------------------------------- Perks + quantity */
+.lower {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+.perksCard {
+  flex: 1 1 320px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  border: 1px solid var(--line-10);
+}
+.perksHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.selectedLabel {
+  font-size: 12px;
+  color: var(--fg-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.selectedName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: #fff;
+}
+.selectedPrice {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--c-cyan);
+}
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--fg-2);
+}
+.check {
+  color: var(--c-cyan);
+  flex: none;
+}
+
+.qtyCard {
+  flex: 1 1 240px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  border: 1px solid var(--line-10);
+}
+.qtyLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.stepBtn {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r-icon);
+  border: 1px solid var(--line-18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color var(--dur-base) ease,
+    color var(--dur-base) ease;
+}
+.stepMinus:hover {
+  border-color: var(--c-magenta);
+  color: var(--c-magenta);
+}
+.stepPlus:hover {
+  border-color: var(--c-cyan);
+  color: var(--c-cyan);
+}
+.qtyValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 36px;
+  min-width: 44px;
+  text-align: center;
+  color: #fff;
+}
+.maxNote {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+/* ----------------------------------------------------- Fixed checkout bar */
+.bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 16px clamp(20px, 5vw, 56px);
+  background: rgba(8, 8, 14, 0.85);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line-10);
+}
+.barSummary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.barLine {
+  font-size: 13px;
+  color: var(--fg-3);
+}
+.barTotal {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: #fff;
+}

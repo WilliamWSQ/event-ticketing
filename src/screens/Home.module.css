@@ -1,0 +1,197 @@
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px) clamp(20px, 5vw, 56px) 96px;
+  animation: pulse-rise 0.5s var(--ease-emphasis) both;
+}
+
+/* ---------------------------------------------------------------- Hero */
+.hero {
+  position: relative;
+  border-radius: var(--r-hero);
+  overflow: hidden;
+  padding: clamp(32px, 5vw, 64px);
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(115deg, #80eaff 0%, #9580ff 42%, #ff005c 100%);
+  background-size: 200% 200%;
+  animation: pulse-grad-shift 14s ease infinite;
+  box-shadow:
+    0 30px 80px rgba(255, 0, 92, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 120% at 80% 0%, transparent 30%, rgba(6, 6, 10, 0.55) 100%);
+}
+.heroSweep {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  opacity: 0.5;
+  background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.5), transparent 30%);
+  mix-blend-mode: overlay;
+  animation: pulse-spin-slow 42s linear infinite;
+  transform-origin: 80% 30%;
+}
+
+.eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-bottom: 18px;
+  padding: 7px 14px;
+  border-radius: var(--r-btn);
+  background: rgba(6, 6, 10, 0.55);
+  backdrop-filter: blur(6px);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-cyan);
+}
+.eyebrowDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: var(--c-magenta);
+  box-shadow: 0 0 10px var(--c-magenta);
+  animation: pulse-glow-breath 1.4s infinite;
+}
+
+.heroTitle {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 7vw, 84px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--c-page);
+  text-shadow: 0 2px 30px rgba(255, 255, 255, 0.3);
+}
+.heroSub {
+  position: relative;
+  max-width: 520px;
+  margin: 18px 0 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: rgba(6, 6, 10, 0.82);
+  font-weight: 500;
+}
+.heroActions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.heroPrimary,
+.heroGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: var(--r-btn);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  transition:
+    transform var(--dur-base) ease,
+    background var(--dur-base) ease;
+}
+.heroPrimary {
+  padding: 15px 28px;
+  border: none;
+  background: var(--c-page);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(6, 6, 10, 0.4);
+}
+.heroPrimary:hover {
+  transform: translateY(-2px);
+}
+.heroPrimary:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+.heroArrow {
+  color: var(--c-cyan);
+}
+.heroGhost {
+  padding: 15px 26px;
+  background: rgba(6, 6, 10, 0.35);
+  backdrop-filter: blur(6px);
+  color: var(--c-page);
+  border: 1.5px solid rgba(6, 6, 10, 0.45);
+}
+.heroGhost:hover {
+  background: rgba(6, 6, 10, 0.5);
+}
+.playIcon {
+  fill: var(--c-page);
+  stroke: none;
+}
+
+/* ----------------------------------------------------------- Filter row */
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 48px 0 24px;
+}
+.sectionTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3.5vw, 38px);
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: #fff;
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line-10);
+  color: var(--fg-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 9px 16px;
+  border-radius: var(--r-btn);
+  transition:
+    border-color var(--dur-base) ease,
+    background var(--dur-base) ease,
+    color var(--dur-base) ease;
+}
+.chip:hover {
+  border-color: rgba(128, 234, 255, 0.5);
+}
+.chipActive {
+  background: var(--grad-soft);
+  border-color: rgba(149, 128, 255, 0.5);
+  color: #fff;
+}
+
+/* ----------------------------------------------------------------- Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 22px;
+}

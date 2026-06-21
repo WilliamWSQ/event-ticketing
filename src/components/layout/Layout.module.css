@@ -1,0 +1,9 @@
+.navSpacer {
+  height: var(--nav-h);
+  flex: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
