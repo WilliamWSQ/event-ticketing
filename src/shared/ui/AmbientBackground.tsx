@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
+import styled, { css } from 'styled-components';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import styles from './AmbientBackground.module.css';
+import { glowBreath } from '../theme/animations';
 
 interface Particle {
   x: number;
@@ -14,11 +15,47 @@ interface Particle {
 
 const COLORS = ['#80EAFF', '#FF005C', '#9580FF'];
 
+const Canvas = styled.canvas`
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const glowBase = css`
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(20px);
+  z-index: 0;
+  pointer-events: none;
+  animation: ${glowBreath} 9s ease-in-out infinite;
+`;
+
+const GlowCyan = styled.div`
+  ${glowBase}
+  top: -15%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(128, 234, 255, 0.16), transparent 65%);
+`;
+
+const GlowMagenta = styled.div`
+  ${glowBase}
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(255, 0, 92, 0.15), transparent 65%);
+  animation-duration: 11s;
+  animation-delay: 1s;
+`;
+
 /**
- * Decorative, stateless ambient layer behind everything: a drifting neon
- * particle field on a canvas + two large breathing radial glows. Particle
- * count drops under reduced motion ("Calm"); the canvas is skipped entirely
- * if motion is reduced.
+ * Decorative ambient layer: a drifting neon particle field on a canvas + two
+ * breathing radial glows. The canvas is skipped under reduced motion.
  */
 export function AmbientBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,9 +128,9 @@ export function AmbientBackground() {
 
   return (
     <>
-      {!reduced && <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />}
-      <div className={`${styles.glow} ${styles.glowCyan}`} aria-hidden="true" />
-      <div className={`${styles.glow} ${styles.glowMagenta}`} aria-hidden="true" />
+      {!reduced && <Canvas ref={canvasRef} aria-hidden="true" />}
+      <GlowCyan aria-hidden="true" />
+      <GlowMagenta aria-hidden="true" />
     </>
   );
 }

@@ -1,12 +1,76 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
 import { api } from '../lib/api';
 import { Field, Input, Row, Select, Textarea } from '../components/ui/Form';
 import { Button } from '../components/ui/Button';
 import { PageHeader } from '../components/PageHeader';
-import { emptyConcert, GENRES, type ConcertLocale, type Concert, type Lang } from '../types';
-import styles from './ConcertForm.module.css';
+import { emptyConcert, GENRES, type Concert, type ConcertLocale, type Lang } from '../types';
+
+const Card = styled.div`
+  background: ${(p) => p.theme.color.surface};
+  border: 1px solid ${(p) => p.theme.line.l10};
+  border-radius: ${(p) => p.theme.radius.lg};
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+`;
+const LocaleTitle = styled.h3`
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+`;
+const Locales = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+`;
+const Locale = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+const Preview = styled.div`
+  height: 56px;
+  border-radius: ${(p) => p.theme.radius.md};
+  border: 1px solid ${(p) => p.theme.line.l12};
+`;
+const LineupHead = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+`;
+const LineupLabel = styled.span`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${(p) => p.theme.color.fg3};
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+`;
+const Act = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+const ActTime = styled(Input)`
+  max-width: 96px;
+  font-family: ${(p) => p.theme.font.mono};
+`;
+const Footer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+`;
+const ErrorText = styled.p`
+  color: ${(p) => p.theme.color.magenta400};
+  font-size: 14px;
+  margin: 0 0 12px;
+`;
 
 export function ConcertForm() {
   const { id } = useParams<{ id: string }>();
@@ -26,9 +90,7 @@ export function ConcertForm() {
       .catch((e: unknown) => setLoadError(e instanceof Error ? e.message : 'Failed to load'));
   }, [id]);
 
-  // immutable updaters
-  const setTop = <K extends keyof Concert>(k: K, v: Concert[K]) =>
-    setC((p) => ({ ...p, [k]: v }));
+  const setTop = <K extends keyof Concert>(k: K, v: Concert[K]) => setC((p) => ({ ...p, [k]: v }));
   const setLoc = (lang: Lang, key: keyof ConcertLocale, value: string) =>
     setC((p) => ({ ...p, [lang]: { ...p[lang], [key]: value } }));
   const setAct = (lang: Lang, idx: number, field: 'time' | 'name', value: string) =>
@@ -60,8 +122,8 @@ export function ConcertForm() {
     const set = (k: keyof ConcertLocale) => (e: ChangeEvent<HTMLInputElement>) =>
       setLoc(lang, k, e.target.value);
     return (
-      <div className={styles.locale}>
-        <h3 className={styles.localeTitle}>{title}</h3>
+      <Locale>
+        <LocaleTitle>{title}</LocaleTitle>
         <Field label="Artist">
           <Input value={loc.artist} onChange={set('artist')} />
         </Field>
@@ -85,35 +147,30 @@ export function ConcertForm() {
           </Field>
         </Row>
         <Field label="Date (long)">
-          <Input value={loc.dateLong} onChange={set('dateLong')} placeholder={lang === 'ru' ? 'Сб · 21 июня 2026' : 'Sat · Jun 21, 2026'} />
+          <Input
+            value={loc.dateLong}
+            onChange={set('dateLong')}
+            placeholder={lang === 'ru' ? 'Сб · 21 июня 2026' : 'Sat · Jun 21, 2026'}
+          />
         </Field>
 
-        <div className={styles.lineupHead}>
-          <span className={styles.lineupLabel}>Lineup</span>
+        <LineupHead>
+          <LineupLabel>Lineup</LineupLabel>
           <Button variant="subtle" size="sm" onClick={() => addAct(lang)}>
             <Plus size={14} />
             Add act
           </Button>
-        </div>
+        </LineupHead>
         {loc.lineup.map((act, i) => (
-          <div className={styles.act} key={i}>
-            <Input
-              className={styles.actTime}
-              value={act.time}
-              onChange={(e) => setAct(lang, i, 'time', e.target.value)}
-              placeholder="22:00"
-            />
-            <Input
-              value={act.name}
-              onChange={(e) => setAct(lang, i, 'name', e.target.value)}
-              placeholder="Name"
-            />
+          <Act key={i}>
+            <ActTime value={act.time} onChange={(e) => setAct(lang, i, 'time', e.target.value)} placeholder="22:00" />
+            <Input value={act.name} onChange={(e) => setAct(lang, i, 'name', e.target.value)} placeholder="Name" />
             <Button variant="danger" size="sm" onClick={() => removeAct(lang, i)} aria-label="Remove act">
               <Trash2 size={14} />
             </Button>
-          </div>
+          </Act>
         ))}
-      </div>
+      </Locale>
     );
   };
 
@@ -121,7 +178,7 @@ export function ConcertForm() {
     return (
       <>
         <PageHeader title="Edit concert" />
-        <p className={styles.error}>{loadError}</p>
+        <ErrorText>{loadError}</ErrorText>
       </>
     );
   }
@@ -139,16 +196,11 @@ export function ConcertForm() {
         }
       />
 
-      <div className={styles.card}>
-        <h3 className={styles.localeTitle}>Core</h3>
+      <Card>
+        <LocaleTitle>Core</LocaleTitle>
         <Row>
           <Field label="ID" hint={editing ? 'Cannot be changed' : 'lowercase, e.g. nova'}>
-            <Input
-              value={c.id}
-              onChange={(e) => setTop('id', e.target.value)}
-              disabled={editing}
-              placeholder="nova"
-            />
+            <Input value={c.id} onChange={(e) => setTop('id', e.target.value)} disabled={editing} placeholder="nova" />
           </Field>
           <Field label="Genre">
             <Select value={c.genre} onChange={(e) => setTop('genre', e.target.value as Concert['genre'])}>
@@ -174,23 +226,23 @@ export function ConcertForm() {
         <Field label="Art (CSS gradient)" hint="Used as placeholder artwork">
           <Textarea value={c.art} onChange={(e) => setTop('art', e.target.value)} rows={2} />
         </Field>
-        <div className={styles.preview} style={{ background: c.art }} aria-label="Art preview" />
-      </div>
+        <Preview style={{ background: c.art }} aria-label="Art preview" />
+      </Card>
 
-      <div className={styles.locales}>
-        <div className={styles.card}>{localeFields('ru', 'Russian')}</div>
-        <div className={styles.card}>{localeFields('en', 'English')}</div>
-      </div>
+      <Locales>
+        <Card>{localeFields('ru', 'Russian')}</Card>
+        <Card>{localeFields('en', 'English')}</Card>
+      </Locales>
 
-      {error && <p className={styles.error}>{error}</p>}
-      <div className={styles.footer}>
+      {error && <ErrorText>{error}</ErrorText>}
+      <Footer>
         <Button variant="ghost" onClick={() => navigate('/concerts')}>
           Cancel
         </Button>
         <Button type="submit" disabled={saving}>
           {saving ? 'Saving…' : editing ? 'Save changes' : 'Create concert'}
         </Button>
-      </div>
+      </Footer>
     </form>
   );
 }

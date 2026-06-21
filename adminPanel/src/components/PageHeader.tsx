@@ -1,5 +1,28 @@
 import type { ReactNode } from 'react';
-import styles from './PageHeader.module.css';
+import styled from 'styled-components';
+
+const Header = styled.header`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+`;
+const Title = styled.h1`
+  margin: 0;
+  font-size: clamp(24px, 3vw, 32px);
+  color: #fff;
+`;
+const Subtitle = styled.p`
+  margin: 6px 0 0;
+  color: ${(p) => p.theme.color.fg3};
+  font-size: 14px;
+`;
+const Action = styled.div`
+  display: flex;
+  gap: 10px;
+`;
 
 export function PageHeader({
   title,
@@ -11,12 +34,12 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className={styles.header}>
+    <Header>
       <div>
-        <h1 className={styles.title}>{title}</h1>
-        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+        <Title>{title}</Title>
+        {subtitle && <Subtitle>{subtitle}</Subtitle>}
       </div>
-      {action && <div className={styles.action}>{action}</div>}
-    </header>
+      {action && <Action>{action}</Action>}
+    </Header>
   );
 }

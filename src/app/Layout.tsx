@@ -1,8 +1,17 @@
 import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
 import { AmbientBackground } from '@shared/ui';
 import { Nav } from './Nav';
 import { ScrollToTop } from './ScrollToTop';
-import styles from './Layout.module.css';
+
+const NavSpacer = styled.div`
+  height: ${(p) => p.theme.layout.navH};
+  flex: none;
+`;
+const Content = styled.div`
+  position: relative;
+  z-index: 1;
+`;
 
 /** App shell: ambient backdrop, fixed glass nav, then the routed page. */
 export function Layout() {
@@ -11,10 +20,10 @@ export function Layout() {
       <ScrollToTop />
       <AmbientBackground />
       <Nav />
-      <div className={styles.navSpacer} />
-      <div className={styles.content}>
+      <NavSpacer />
+      <Content>
         <Outlet />
-      </div>
+      </Content>
     </>
   );
 }

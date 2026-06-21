@@ -1,13 +1,11 @@
-import { cn } from '../lib/cn';
-import styles from './Equalizer.module.css';
+import styled, { css } from 'styled-components';
+import { eq } from '../theme/animations';
 
 interface Bar {
   color: string;
-  /** Height — px number for the logo, CSS length (e.g. '70%') for the lineup. */
   height: number | string;
   duration: number;
   delay: number;
-  /** Logo bars get a neon glow. */
   glow?: boolean;
 }
 
@@ -24,15 +22,40 @@ const LINEUP_BARS: Bar[] = [
   { color: '#80EAFF', height: '70%', duration: 1, delay: 0.2 },
 ];
 
+const Wrap = styled.span<{ $variant: 'logo' | 'lineup' }>`
+  display: flex;
+  ${(p) =>
+    p.$variant === 'logo'
+      ? css`
+          align-items: flex-end;
+          justify-content: center;
+          gap: 3px;
+        `
+      : css`
+          align-items: flex-end;
+          gap: 2px;
+          height: 16px;
+        `}
+`;
+
+const Bar = styled.i`
+  display: block;
+  width: 3px;
+  border-radius: 2px;
+  transform-origin: bottom;
+  animation-name: ${eq};
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+`;
+
 /** Looping equalizer bars — used in the logo (fixed px) and lineup rows (%). */
 export function Equalizer({ variant }: { variant: 'logo' | 'lineup' }) {
   const bars = variant === 'logo' ? LOGO_BARS : LINEUP_BARS;
   return (
-    <span className={cn(styles.eq, styles[variant])} aria-hidden="true">
+    <Wrap $variant={variant} aria-hidden="true">
       {bars.map((b, i) => (
-        <i
+        <Bar
           key={i}
-          className={styles.bar}
           style={{
             height: typeof b.height === 'number' ? `${b.height}px` : b.height,
             background: b.color,
@@ -42,6 +65,6 @@ export function Equalizer({ variant }: { variant: 'logo' | 'lineup' }) {
           }}
         />
       ))}
-    </span>
+    </Wrap>
   );
 }

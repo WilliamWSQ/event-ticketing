@@ -1,13 +1,41 @@
-import type {
-  InputHTMLAttributes,
-  ReactNode,
-  SelectHTMLAttributes,
-  TextareaHTMLAttributes,
-} from 'react';
-import { cn } from '../../lib/cn';
-import styles from './Form.module.css';
+import type { ReactNode } from 'react';
+import styled, { css } from 'styled-components';
 
-/** Labeled field wrapper. */
+const controlBase = css`
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: ${(p) => p.theme.radius.sm};
+  background: ${(p) => p.theme.color.page};
+  border: 1px solid ${(p) => p.theme.line.l12};
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+  &::placeholder {
+    color: ${(p) => p.theme.color.fgMuted};
+  }
+  &:focus {
+    border-color: rgba(128, 234, 255, 0.5);
+  }
+`;
+
+const FieldWrap = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+const FieldLabel = styled.span`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${(p) => p.theme.color.fg3};
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+`;
+const Hint = styled.span`
+  font-size: 12px;
+  color: ${(p) => p.theme.color.fgMuted};
+`;
+
 export function Field({
   label,
   hint,
@@ -18,35 +46,36 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className={styles.field}>
-      <span className={styles.label}>{label}</span>
+    <FieldWrap>
+      <FieldLabel>{label}</FieldLabel>
       {children}
-      {hint && <span className={styles.hint}>{hint}</span>}
-    </label>
+      {hint && <Hint>{hint}</Hint>}
+    </FieldWrap>
   );
 }
 
-export function Input({ className, ...rest }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={cn(styles.control, className)} {...rest} />;
-}
+export const Input = styled.input`
+  ${controlBase}
+`;
 
-export function Textarea({ className, ...rest }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn(styles.control, styles.textarea, className)} {...rest} />;
-}
+export const Textarea = styled.textarea`
+  ${controlBase}
+  resize: vertical;
+  min-height: 64px;
+  font-family: ${(p) => p.theme.font.mono};
+  font-size: 13px;
+  line-height: 1.5;
+`;
 
-export function Select({
-  className,
-  children,
-  ...rest
-}: SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select className={cn(styles.control, className)} {...rest}>
-      {children}
-    </select>
-  );
-}
+export const Select = styled.select`
+  ${controlBase}
+`;
 
-/** Horizontal row of fields. */
-export function Row({ children }: { children: ReactNode }) {
-  return <div className={styles.row}>{children}</div>;
-}
+export const Row = styled.div`
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  & > * {
+    flex: 1 1 160px;
+  }
+`;

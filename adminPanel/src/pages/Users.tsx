@@ -1,13 +1,31 @@
 import { useState } from 'react';
 import { Pencil } from 'lucide-react';
+import styled from 'styled-components';
 import { api } from '../lib/api';
 import { useAsync } from '../lib/useAsync';
 import { PageHeader } from '../components/PageHeader';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
-import { Field, Input, Row } from '../components/ui/Form';
+import { Field, Input, Row as FieldRow } from '../components/ui/Form';
+import {
+  Actions,
+  Empty,
+  Row,
+  Strong,
+  Sub,
+  Table,
+  TableScroll,
+  TableWrap,
+  Td,
+  Th,
+} from '../components/ui/Table';
 import type { AdminUser } from '../types';
-import table from '../components/table.module.css';
+
+const ErrorText = styled.p`
+  color: ${(p) => p.theme.color.magenta400};
+  font-size: 14px;
+  margin: 0;
+`;
 
 export function Users() {
   const { data, loading, error, reload } = useAsync(() => api.listUsers());
@@ -18,54 +36,52 @@ export function Users() {
     <>
       <PageHeader title="Users" subtitle={`${users.length} account(s)`} />
 
-      <div className={table.wrap}>
-        <div className={table.scroll}>
-          <table className={table.table}>
+      <TableWrap>
+        <TableScroll>
+          <Table>
             <thead>
               <tr>
-                <th className={table.th}>User</th>
-                <th className={table.th}>Email</th>
-                <th className={table.th}>City</th>
-                <th className={`${table.th} ${table.right}`}>Shows</th>
-                <th className={`${table.th} ${table.right}`}>Cities</th>
-                <th className={`${table.th} ${table.right}`}>Hours</th>
-                <th className={`${table.th} ${table.right}`}>Actions</th>
+                <Th>User</Th>
+                <Th>Email</Th>
+                <Th>City</Th>
+                <Th $right>Shows</Th>
+                <Th $right>Cities</Th>
+                <Th $right>Hours</Th>
+                <Th $right>Actions</Th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
-                <tr key={u.id} className={table.row}>
-                  <td className={table.td}>
-                    <span className={table.strong}>{u.nameRu}</span>
+                <Row key={u.id}>
+                  <Td>
+                    <Strong>{u.nameRu}</Strong>
                     <br />
-                    <span className={table.sub}>{u.nameEn}</span>
-                  </td>
-                  <td className={`${table.td} ${table.mono}`}>{u.email}</td>
-                  <td className={table.td}>{u.cityRu}</td>
-                  <td className={`${table.td} ${table.right}`}>{u.statShows}</td>
-                  <td className={`${table.td} ${table.right}`}>{u.statCities}</td>
-                  <td className={`${table.td} ${table.right}`}>{u.statHours}</td>
-                  <td className={table.td}>
-                    <div className={table.actions}>
+                    <Sub>{u.nameEn}</Sub>
+                  </Td>
+                  <Td $mono>{u.email}</Td>
+                  <Td>{u.cityRu}</Td>
+                  <Td $right>{u.statShows}</Td>
+                  <Td $right>{u.statCities}</Td>
+                  <Td $right>{u.statHours}</Td>
+                  <Td>
+                    <Actions>
                       <Button variant="ghost" size="sm" onClick={() => setEditing(u)}>
                         <Pencil size={14} />
                         Edit
                       </Button>
-                    </div>
-                  </td>
-                </tr>
+                    </Actions>
+                  </Td>
+                </Row>
               ))}
               {!users.length && (
                 <tr>
-                  <td className={table.empty} colSpan={7}>
-                    {loading ? 'Loading…' : (error ?? 'No users')}
-                  </td>
+                  <Empty colSpan={7}>{loading ? 'Loading…' : (error ?? 'No users')}</Empty>
                 </tr>
               )}
             </tbody>
-          </table>
-        </div>
-      </div>
+          </Table>
+        </TableScroll>
+      </TableWrap>
 
       {editing && (
         <UserEditModal
@@ -133,31 +149,31 @@ function UserEditModal({
         </>
       }
     >
-      <Row>
+      <FieldRow>
         <Field label="Email">
           <Input value={form.email} onChange={(e) => set({ email: e.target.value })} />
         </Field>
         <Field label="Initials">
           <Input value={form.initials} onChange={(e) => set({ initials: e.target.value })} />
         </Field>
-      </Row>
-      <Row>
+      </FieldRow>
+      <FieldRow>
         <Field label="Name (RU)">
           <Input value={form.nameRu} onChange={(e) => set({ nameRu: e.target.value })} />
         </Field>
         <Field label="Name (EN)">
           <Input value={form.nameEn} onChange={(e) => set({ nameEn: e.target.value })} />
         </Field>
-      </Row>
-      <Row>
+      </FieldRow>
+      <FieldRow>
         <Field label="City (RU)">
           <Input value={form.cityRu} onChange={(e) => set({ cityRu: e.target.value })} />
         </Field>
         <Field label="City (EN)">
           <Input value={form.cityEn} onChange={(e) => set({ cityEn: e.target.value })} />
         </Field>
-      </Row>
-      <Row>
+      </FieldRow>
+      <FieldRow>
         <Field label="Shows">
           <Input type="number" value={form.statShows} onChange={(e) => set({ statShows: Number(e.target.value) })} />
         </Field>
@@ -167,8 +183,8 @@ function UserEditModal({
         <Field label="Hours">
           <Input type="number" value={form.statHours} onChange={(e) => set({ statHours: Number(e.target.value) })} />
         </Field>
-      </Row>
-      {error && <p style={{ color: 'var(--c-magenta-400)', fontSize: 14, margin: 0 }}>{error}</p>}
+      </FieldRow>
+      {error && <ErrorText>{error}</ErrorText>}
     </Modal>
   );
 }

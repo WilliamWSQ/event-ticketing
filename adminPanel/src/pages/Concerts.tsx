@@ -5,7 +5,21 @@ import { rub } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
 import { PageHeader } from '../components/PageHeader';
 import { Button } from '../components/ui/Button';
-import table from '../components/table.module.css';
+import {
+  Actions,
+  CellFlex,
+  Empty,
+  Genre,
+  Row,
+  Strong,
+  Sub,
+  Swatch,
+  Table,
+  TableScroll,
+  TableWrap,
+  Td,
+  Th,
+} from '../components/ui/Table';
 
 export function Concerts() {
   const navigate = useNavigate();
@@ -35,40 +49,42 @@ export function Concerts() {
         }
       />
 
-      <div className={table.wrap}>
-        <div className={table.scroll}>
-          <table className={table.table}>
+      <TableWrap>
+        <TableScroll>
+          <Table>
             <thead>
               <tr>
-                <th className={table.th}>Artist</th>
-                <th className={table.th}>Genre</th>
-                <th className={table.th}>Date</th>
-                <th className={table.th}>City</th>
-                <th className={`${table.th} ${table.right}`}>From</th>
-                <th className={`${table.th} ${table.right}`}>Actions</th>
+                <Th>Artist</Th>
+                <Th>Genre</Th>
+                <Th>Date</Th>
+                <Th>City</Th>
+                <Th $right>From</Th>
+                <Th $right>Actions</Th>
               </tr>
             </thead>
             <tbody>
               {concerts.map((c) => (
-                <tr key={c.id} className={table.row}>
-                  <td className={table.td}>
-                    <div className={table.cellFlex}>
-                      <span className={table.swatch} style={{ background: c.art }} />
+                <Row key={c.id}>
+                  <Td>
+                    <CellFlex>
+                      <Swatch style={{ background: c.art }} />
                       <span>
-                        <span className={table.strong}>{c.ru.artist}</span>
+                        <Strong>{c.ru.artist}</Strong>
                         <br />
-                        <span className={table.sub}>{c.ru.tour}</span>
+                        <Sub>{c.ru.tour}</Sub>
                       </span>
-                    </div>
-                  </td>
-                  <td className={table.td}>
-                    <span className={table.genre}>{c.genre}</span>
-                  </td>
-                  <td className={table.td}>{c.ru.dateLong}</td>
-                  <td className={table.td}>{c.ru.city}</td>
-                  <td className={`${table.td} ${table.right} ${table.strong}`}>{rub(c.priceFrom)}</td>
-                  <td className={table.td}>
-                    <div className={table.actions}>
+                    </CellFlex>
+                  </Td>
+                  <Td>
+                    <Genre>{c.genre}</Genre>
+                  </Td>
+                  <Td>{c.ru.dateLong}</Td>
+                  <Td>{c.ru.city}</Td>
+                  <Td $right $strong>
+                    {rub(c.priceFrom)}
+                  </Td>
+                  <Td>
+                    <Actions>
                       <Button variant="ghost" size="sm" onClick={() => navigate(`/concerts/${c.id}`)}>
                         <Pencil size={14} />
                         Edit
@@ -76,21 +92,19 @@ export function Concerts() {
                       <Button variant="danger" size="sm" onClick={() => remove(c.id, c.ru.artist)}>
                         <Trash2 size={14} />
                       </Button>
-                    </div>
-                  </td>
-                </tr>
+                    </Actions>
+                  </Td>
+                </Row>
               ))}
               {!concerts.length && (
                 <tr>
-                  <td className={table.empty} colSpan={6}>
-                    {loading ? 'Loading…' : (error ?? 'No concerts yet')}
-                  </td>
+                  <Empty colSpan={6}>{loading ? 'Loading…' : (error ?? 'No concerts yet')}</Empty>
                 </tr>
               )}
             </tbody>
-          </table>
-        </div>
-      </div>
+          </Table>
+        </TableScroll>
+      </TableWrap>
     </>
   );
 }

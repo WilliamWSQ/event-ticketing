@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pencil } from 'lucide-react';
+import styled from 'styled-components';
 import { api } from '../lib/api';
 import { rub } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
@@ -7,8 +8,26 @@ import { PageHeader } from '../components/PageHeader';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { Field, Input } from '../components/ui/Form';
+import {
+  Actions,
+  Badge,
+  Empty,
+  Row,
+  Strong,
+  Sub,
+  Table,
+  TableScroll,
+  TableWrap,
+  Td,
+  Th,
+} from '../components/ui/Table';
 import type { Tier } from '../types';
-import table from '../components/table.module.css';
+
+const ErrorText = styled.p`
+  color: ${(p) => p.theme.color.magenta400};
+  font-size: 14px;
+  margin: 0;
+`;
 
 export function Tiers() {
   const { data, loading, error, reload } = useAsync(() => api.listTiers());
@@ -19,52 +38,52 @@ export function Tiers() {
     <>
       <PageHeader title="Tiers" subtitle="Ticket zones & pricing" />
 
-      <div className={table.wrap}>
-        <div className={table.scroll}>
-          <table className={table.table}>
+      <TableWrap>
+        <TableScroll>
+          <Table>
             <thead>
               <tr>
-                <th className={table.th}>Zone</th>
-                <th className={table.th}>ID</th>
-                <th className={table.th}>Description</th>
-                <th className={`${table.th} ${table.right}`}>Price</th>
-                <th className={`${table.th} ${table.right}`}>Actions</th>
+                <Th>Zone</Th>
+                <Th>ID</Th>
+                <Th>Description</Th>
+                <Th $right>Price</Th>
+                <Th $right>Actions</Th>
               </tr>
             </thead>
             <tbody>
               {tiers.map((t) => (
-                <tr key={t.id} className={table.row}>
-                  <td className={table.td}>
-                    <span className={table.strong}>{t.ru.name}</span>
+                <Row key={t.id}>
+                  <Td>
+                    <Strong>{t.ru.name}</Strong>
                     <br />
-                    <span className={table.sub}>{t.en.name}</span>
-                  </td>
-                  <td className={table.td}>
-                    <span className={table.badge}>{t.id}</span>
-                  </td>
-                  <td className={table.td}>{t.ru.desc}</td>
-                  <td className={`${table.td} ${table.right} ${table.strong}`}>{rub(t.price)}</td>
-                  <td className={table.td}>
-                    <div className={table.actions}>
+                    <Sub>{t.en.name}</Sub>
+                  </Td>
+                  <Td>
+                    <Badge>{t.id}</Badge>
+                  </Td>
+                  <Td>{t.ru.desc}</Td>
+                  <Td $right $strong>
+                    {rub(t.price)}
+                  </Td>
+                  <Td>
+                    <Actions>
                       <Button variant="ghost" size="sm" onClick={() => setEditing(t)}>
                         <Pencil size={14} />
                         Price
                       </Button>
-                    </div>
-                  </td>
-                </tr>
+                    </Actions>
+                  </Td>
+                </Row>
               ))}
               {!tiers.length && (
                 <tr>
-                  <td className={table.empty} colSpan={5}>
-                    {loading ? 'Loading…' : (error ?? 'No tiers')}
-                  </td>
+                  <Empty colSpan={5}>{loading ? 'Loading…' : (error ?? 'No tiers')}</Empty>
                 </tr>
               )}
             </tbody>
-          </table>
-        </div>
-      </div>
+          </Table>
+        </TableScroll>
+      </TableWrap>
 
       {editing && (
         <TierEditModal
@@ -123,7 +142,7 @@ function TierEditModal({
       <Field label="Price (₽)" hint="Names and perks are managed in the catalogue seed.">
         <Input type="number" min={0} value={price} onChange={(e) => setPrice(Number(e.target.value))} />
       </Field>
-      {error && <p style={{ color: 'var(--c-magenta-400)', fontSize: 14, margin: 0 }}>{error}</p>}
+      {error && <ErrorText>{error}</ErrorText>}
     </Modal>
   );
 }

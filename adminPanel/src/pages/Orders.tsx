@@ -2,7 +2,7 @@ import { api } from '../lib/api';
 import { dateTime, rub } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
 import { PageHeader } from '../components/PageHeader';
-import table from '../components/table.module.css';
+import { Empty, Row, Table, TableScroll, TableWrap, Td, Th } from '../components/ui/Table';
 
 export function Orders() {
   const { data, loading, error } = useAsync(() => api.listOrders());
@@ -11,53 +11,50 @@ export function Orders() {
 
   return (
     <>
-      <PageHeader
-        title="Orders"
-        subtitle={`${orders.length} transactions · ${rub(gross)} gross`}
-      />
-      <div className={table.wrap}>
-        <div className={table.scroll}>
-          <table className={table.table}>
+      <PageHeader title="Orders" subtitle={`${orders.length} transactions · ${rub(gross)} gross`} />
+      <TableWrap>
+        <TableScroll>
+          <Table>
             <thead>
               <tr>
-                <th className={table.th}>Order</th>
-                <th className={table.th}>When</th>
-                <th className={table.th}>Concert</th>
-                <th className={table.th}>Tier</th>
-                <th className={table.th}>Qty</th>
-                <th className={`${table.th} ${table.right}`}>Subtotal</th>
-                <th className={`${table.th} ${table.right}`}>Fees</th>
-                <th className={`${table.th} ${table.right}`}>Total</th>
-                <th className={table.th}>Method</th>
-                <th className={table.th}>User</th>
+                <Th>Order</Th>
+                <Th>When</Th>
+                <Th>Concert</Th>
+                <Th>Tier</Th>
+                <Th>Qty</Th>
+                <Th $right>Subtotal</Th>
+                <Th $right>Fees</Th>
+                <Th $right>Total</Th>
+                <Th>Method</Th>
+                <Th>User</Th>
               </tr>
             </thead>
             <tbody>
               {orders.map((o) => (
-                <tr key={o.id} className={table.row}>
-                  <td className={`${table.td} ${table.mono}`}>{o.id}</td>
-                  <td className={table.td}>{dateTime(o.createdAt)}</td>
-                  <td className={`${table.td} ${table.strong}`}>{o.concertArtist.ru ?? o.concertId}</td>
-                  <td className={table.td}>{o.tierName.ru ?? o.tierId}</td>
-                  <td className={table.td}>{o.qty}</td>
-                  <td className={`${table.td} ${table.right}`}>{rub(o.subtotal)}</td>
-                  <td className={`${table.td} ${table.right}`}>{rub(o.fees)}</td>
-                  <td className={`${table.td} ${table.right} ${table.strong}`}>{rub(o.total)}</td>
-                  <td className={table.td}>{o.payMethod ?? '—'}</td>
-                  <td className={table.td}>{o.userEmail ?? '—'}</td>
-                </tr>
+                <Row key={o.id}>
+                  <Td $mono>{o.id}</Td>
+                  <Td>{dateTime(o.createdAt)}</Td>
+                  <Td $strong>{o.concertArtist.ru ?? o.concertId}</Td>
+                  <Td>{o.tierName.ru ?? o.tierId}</Td>
+                  <Td>{o.qty}</Td>
+                  <Td $right>{rub(o.subtotal)}</Td>
+                  <Td $right>{rub(o.fees)}</Td>
+                  <Td $right $strong>
+                    {rub(o.total)}
+                  </Td>
+                  <Td>{o.payMethod ?? '—'}</Td>
+                  <Td>{o.userEmail ?? '—'}</Td>
+                </Row>
               ))}
               {!orders.length && (
                 <tr>
-                  <td className={table.empty} colSpan={10}>
-                    {loading ? 'Loading…' : (error ?? 'No orders yet')}
-                  </td>
+                  <Empty colSpan={10}>{loading ? 'Loading…' : (error ?? 'No orders yet')}</Empty>
                 </tr>
               )}
             </tbody>
-          </table>
-        </div>
-      </div>
+          </Table>
+        </TableScroll>
+      </TableWrap>
     </>
   );
 }
