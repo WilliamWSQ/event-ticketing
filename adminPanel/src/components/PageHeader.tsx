@@ -1,28 +1,5 @@
 import type { ReactNode } from 'react';
-import styled from 'styled-components';
-
-const Header = styled.header`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-`;
-const Title = styled.h1`
-  margin: 0;
-  font-size: clamp(24px, 3vw, 32px);
-  color: #fff;
-`;
-const Subtitle = styled.p`
-  margin: 6px 0 0;
-  color: ${(p) => p.theme.color.fg3};
-  font-size: 14px;
-`;
-const Action = styled.div`
-  display: flex;
-  gap: 10px;
-`;
+import * as S from './PageHeader.styles';
 
 export function PageHeader({
   title,
@@ -34,12 +11,12 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <Header>
+    <S.Header>
       <div>
-        <Title>{title}</Title>
-        {subtitle && <Subtitle>{subtitle}</Subtitle>}
+        <S.Title>{title}</S.Title>
+        {subtitle && <S.Subtitle>{subtitle}</S.Subtitle>}
       </div>
-      {action && <Action>{action}</Action>}
-    </Header>
+      {action && <S.Action>{action}</S.Action>}
+    </S.Header>
   );
 }
