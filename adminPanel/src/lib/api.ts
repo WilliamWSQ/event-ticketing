@@ -1,51 +1,58 @@
+import axios, { type AxiosRequestConfig } from 'axios';
 import type { AdminOrder, AdminUser, Concert, Stats, Tier, TierId } from '../types';
-
-const BASE = '/api';
 
 /** Optional shared secret — set VITE_ADMIN_TOKEN to match the backend's ADMIN_TOKEN. */
 const ADMIN_TOKEN = (import.meta.env as Record<string, string | undefined>).VITE_ADMIN_TOKEN;
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (ADMIN_TOKEN) headers['x-admin-token'] = ADMIN_TOKEN;
+const http = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+    ...(ADMIN_TOKEN ? { 'x-admin-token': ADMIN_TOKEN } : {}),
+  },
+});
 
-  const res = await fetch(`${BASE}${path}`, { ...init, headers: { ...headers, ...init?.headers } });
-  if (!res.ok) {
-    let detail = '';
-    try {
-      detail = ((await res.json()) as { error?: string }).error ?? '';
-    } catch {
-      /* ignore */
+// Surface the server's `{ error }` message as a plain Error.
+http.interceptors.response.use(
+  (res) => res,
+  (error: unknown) => {
+    let message = 'Request failed';
+    if (axios.isAxiosError(error)) {
+      message = (error.response?.data as { error?: string } | undefined)?.error ?? error.message;
+    } else if (error instanceof Error) {
+      message = error.message;
     }
-    throw new Error(detail || `Request failed: ${res.status} ${res.statusText}`);
-  }
-  if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+    return Promise.reject(new Error(message));
+  },
+);
+
+async function request<T>(config: AxiosRequestConfig): Promise<T> {
+  const { data } = await http.request<T>(config);
+  return data;
 }
 
 export const api = {
   // dashboard
-  stats: () => request<Stats>('/admin/stats'),
+  stats: () => request<Stats>({ url: '/admin/stats' }),
 
   // concerts (reads are public; writes are admin)
-  listConcerts: () => request<Concert[]>('/concerts'),
-  getConcert: (id: string) => request<Concert>(`/concerts/${id}`),
-  createConcert: (c: Concert) =>
-    request<Concert>('/admin/concerts', { method: 'POST', body: JSON.stringify(c) }),
+  listConcerts: () => request<Concert[]>({ url: '/concerts' }),
+  getConcert: (id: string) => request<Concert>({ url: `/concerts/${id}` }),
+  createConcert: (c: Concert) => request<Concert>({ method: 'post', url: '/admin/concerts', data: c }),
   updateConcert: (id: string, c: Concert) =>
-    request<Concert>(`/admin/concerts/${id}`, { method: 'PUT', body: JSON.stringify(c) }),
-  deleteConcert: (id: string) => request<void>(`/admin/concerts/${id}`, { method: 'DELETE' }),
+    request<Concert>({ method: 'put', url: `/admin/concerts/${id}`, data: c }),
+  deleteConcert: (id: string) => request<void>({ method: 'delete', url: `/admin/concerts/${id}` }),
 
   // orders
-  listOrders: () => request<AdminOrder[]>('/admin/orders'),
+  listOrders: () => request<AdminOrder[]>({ url: '/admin/orders' }),
 
   // tiers
-  listTiers: () => request<Tier[]>('/tiers'),
+  listTiers: () => request<Tier[]>({ url: '/tiers' }),
   updateTierPrice: (id: TierId, price: number) =>
-    request<Tier>(`/admin/tiers/${id}`, { method: 'PUT', body: JSON.stringify({ price }) }),
+    request<Tier>({ method: 'put', url: `/admin/tiers/${id}`, data: { price } }),
 
   // users
-  listUsers: () => request<AdminUser[]>('/admin/users'),
+  listUsers: () => request<AdminUser[]>({ url: '/admin/users' }),
   updateUser: (id: string, patch: Partial<AdminUser>) =>
-    request<AdminUser>(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(patch) }),
+    request<AdminUser>({ method: 'put', url: `/admin/users/${id}`, data: patch }),
 };

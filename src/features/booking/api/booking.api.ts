@@ -15,9 +15,9 @@ export interface OrderResult extends Quote {
 }
 
 export const bookingApi = {
-  listTiers: () => request<Tier[]>('/tiers'),
+  listTiers: () => request<Tier[]>({ url: '/tiers' }),
   quote: (tierId: TierId, qty: number) =>
-    request<Quote>('/orders/quote', { method: 'POST', body: JSON.stringify({ tierId, qty }) }),
+    request<Quote>({ method: 'post', url: '/orders/quote', data: { tierId, qty } }),
   createOrder: (body: { concertId: string; tierId: TierId; qty: number; payMethod: PayMethod }) =>
-    request<OrderResult>('/orders', { method: 'POST', body: JSON.stringify(body) }),
+    request<OrderResult>({ method: 'post', url: '/orders', data: body }),
 };

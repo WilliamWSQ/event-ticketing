@@ -3,8 +3,9 @@ import type { Concert } from '@shared/types';
 
 export const catalogApi = {
   listConcerts: (genre?: string) =>
-    request<Concert[]>(
-      `/concerts${genre && genre !== 'ALL' ? `?genre=${encodeURIComponent(genre)}` : ''}`,
-    ),
-  getConcert: (id: string) => request<Concert>(`/concerts/${id}`),
+    request<Concert[]>({
+      url: '/concerts',
+      params: genre && genre !== 'ALL' ? { genre } : undefined,
+    }),
+  getConcert: (id: string) => request<Concert>({ url: `/concerts/${id}` }),
 };

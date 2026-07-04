@@ -16,6 +16,6 @@ export interface MyTicket {
 }
 
 export const accountApi = {
-  me: () => request<MeProfile>('/me'),
-  myTickets: () => request<MyTicket[]>('/me/tickets'),
+  me: () => request<MeProfile>({ url: '/me' }),
+  myTickets: () => request<MyTicket[]>({ url: '/me/tickets' }),
 };
