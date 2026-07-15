@@ -5,7 +5,9 @@
   "type": "module",
   "packageManager": "yarn@1.22.22",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/free-ports.mjs 5173 4000 && concurrently -k -n web,api -c cyan,magenta \"vite\" \"yarn --cwd backend dev\"",
+    "dev:web": "node scripts/free-ports.mjs 5173 && vite",
+    "dev:api": "node scripts/free-ports.mjs 4000 && yarn --cwd backend dev",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit"
@@ -24,6 +26,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "babel-plugin-styled-components": "^2.1.4",
+    "concurrently": "^10.0.3",
     "typescript": "^5.5.3",
     "vite": "^5.4.0"
   }
