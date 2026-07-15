@@ -4,14 +4,19 @@ import { LanguageToggle, useI18n } from '@shared/i18n';
 import { useScrolled } from '@shared/hooks/useScrolled';
 import { Logo } from '@shared/ui';
 import { SearchBar } from '@features/catalog';
+import { useAccount } from '@features/account';
 import * as S from './Nav.styles';
 
 /** Persistent glass nav. Solidifies on scroll; re-localizes live. */
 export function Nav() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const scrolled = useScrolled(8);
   const onAccount = useLocation().pathname === '/account';
+  const { profile } = useAccount();
+
+  const initials = profile?.initials ?? t.initials;
+  const userShort = profile ? profile.name[lang].split(' ')[0] : t.userShort;
 
   return (
     <S.Bar $scrolled={scrolled}>
@@ -39,8 +44,8 @@ export function Nav() {
         </S.IconBtn>
 
         <S.Account $active={onAccount} onClick={() => navigate('/account')}>
-          <S.Avatar>{t.initials}</S.Avatar>
-          <S.UserName>{t.userShort}</S.UserName>
+          <S.Avatar>{initials}</S.Avatar>
+          <S.UserName>{userShort}</S.UserName>
         </S.Account>
       </S.Inner>
     </S.Bar>
